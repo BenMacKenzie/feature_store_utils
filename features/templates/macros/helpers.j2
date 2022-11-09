@@ -1,0 +1,43 @@
+{% macro source_cols(cols) -%}
+cols|join(', ')
+{%- endmacro -%}
+
+{% macro geometric_growth(col) -%}
+exp(sum(ln({{col}}_growth)))
+{%- endmacro -%}
+
+{% macro m_agg_1(func, cols, grain) -%}
+{% for col in cols %}{{func}}({{col}}) as {{col}}_{{grain}}{% if not loop.last %},{% endif %}{% endfor %}
+{%- endmacro -%}
+
+{% macro m_agg_2(cols, grain, eol_table) -%}
+{% for col in cols %}{{grain}}_{{col}}, lag({{grain}}_{{col}},1,0) over (partition by {{eol_table.name}}.{{eol_table.entity.name}}, {{eol_table.name}}.{{eol_table.observation_date.name}} order by agg_date asc) \
+
+
+as {{col}}_{{grain}}{% if not loop.last %},{% endif %}{% endfor %}
+{%- endmacro -%}
+
+
+ over (partition by {{eol_table.name}}.{{eol_table.entity.name}}, {{eol_table.name}}.{{eol_table.observation_date.name}} order by agg_date asc) as prior_{{feature.grain}}_{{feature.source_col}}
+
+
+{% macro fact_agg_time_window(eol_table, table, feature) -%}
+{% if feature.offset is defined %}
+{{table.source_table_name}}.{{table.date}} <= dateadd({{feature.offset.grain}}, -{{feature.offset.length}},{{eol_table.name}}.{{eol_table.observation_date.name}}) and
+{{table.source_table_name}}.{{table.date}} > dateadd({{feature.offset.grain}},-{{feature.offset.length}}, dateadd({{feature.grain}}, -{feature.window_length}}))
+{% else %}
+{{table.source_table_name}}.{{table.date}} <= {{eol_table.name}}.{{eol_table.observation_date.name}} and
+{{table.source_table_name}}.{{table.date}} > dateadd({{feature.grain}}, -{{feature.window_length}}, {{eol_table.name}}.{{eol_table.observation_date.name}})
+{% endif %}
+{%- endmacro -%}
+
+{% macro time_series_time_window(eol_table, table, feature) -%}
+{% if feature.offset is defined %}
+agg_date < dateadd({{feature.offset.grain}}, -{{feature.offset.length}},{{eol_table.name}}.{{eol_table.observation_date.name}})
+and agg_date >= dateadd({{feature.offset.grain}},-{{feature.offset.length}}, dateadd({{feature.grain}}, -{{feature.window_length}}, {{eol_table.name}}.{{eol_table.observation_date.name}}))
+{% else %}
+agg_date < {{eol_table.observation_date.name}}
+and agg_date >= dateadd({{feature.grain}}, -{{feature.window_length}}, {{eol_table.observation_date.name}})
+{% endif %}
+{%- endmacro -%}
+

@@ -1,0 +1,15 @@
+{% macro fact_agg_time_window(eol_table, table, feature) -%}
+{% if feature.offset is defined %}
+{{table.source_table_name}}.{{table.date}} <= dateadd({{feature.offset.grain}}, -{{feature.offset.length}},{{eol_table.name}}.{{eol_table.observation_date.name}}) and
+{{table.source_table_name}}.{{table.date}} > dateadd({{feature.offset.grain}},-{{feature.offset.length}}, dateadd({{feature.grain}}, -{feature.window_length}}))
+{% else %}
+{{table.source_table_name}}.{{table.date}} <= {{eol_table.name}}.{{eol_table.observation_date.name}} and
+{{table.source_table_name}}.{{table.date}} > dateadd({{feature.grain}}, -{{feature.window_length}}, {{eol_table.name}}.{{eol_table.observation_date.name}})
+{% endif %}
+{%- endmacro -%}
+
+select {{eol_table.name}}.{{eol_table.entity.name}}, {{eol_table.name}}.{{eol_table.observation_date.name}}, {{feature.function}}({{feature.source_col}}) as {{feature.name}}
+from {{eol_table.name}} join {{table.source_table_name}} on  {{eol_table.name}}.{{table.eol_key}} =  {{table.source_table_name}}.{{table.pk}} where
+{{fact_agg_time_window(eol_table, table, feature)}}
+{% if feature.filter is defined %} and {{feature.filter.column}} {{feature.filter.operator}} {{feature.filter.value}}{% endif %}
+group by {{eol_table.name}}.{{eol_table.entity.name}}, {{eol_table.name}}.{{eol_table.observation_date.name}}

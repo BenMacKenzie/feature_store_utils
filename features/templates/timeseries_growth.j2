@@ -1,0 +1,22 @@
+{% macro time_series_time_window(eol_table, table, feature) -%}
+{% if feature.offset is defined %}
+agg_date < dateadd({{feature.offset.grain}}, -{{feature.offset.length}},{{eol_table.name}}.{{eol_table.observation_date.name}})
+and agg_date >= dateadd({{feature.offset.grain}},-{{feature.offset.length}}, dateadd({{feature.grain}}, -{{feature.window_length}}, {{eol_table.name}}.{{eol_table.observation_date.name}}))
+{% else %}
+agg_date < {{eol_table.observation_date.name}}
+and agg_date >= dateadd({{feature.grain}}, -{{feature.window_length}}, {{eol_table.observation_date.name}})
+{% endif %}
+{%- endmacro -%}
+
+{% macro geometric_growth(col) -%}
+exp(sum(ln({{col}}_growth)))
+{%- endmacro -%}
+
+with 
+a as (select {{eol_table.entity.name}}, {{feature.time_boundary}} as agg_date, sum({{feature.source_col}}) as {{feature.grain}}_{{feature.source_col}} from {{table.source_table_name}} join {{dim_calendar}} on {{table.source_table_name}}.{{table.date}} = {{dim_calendar}}.calendarDate group by {{eol_table.entity.name}}, agg_date),
+b as (select {{eol_table.name}}.{{eol_table.entity.name}}, {{eol_table.name}}.{{eol_table.observation_date.name}}, agg_date, {{feature.grain}}_{{feature.source_col}}, lag({{feature.grain}}_{{feature.source_col}}, 1,0) over (partition by {{eol_table.name}}.{{eol_table.entity.name}}, {{eol_table.name}}.{{eol_table.observation_date.name}} order by agg_date asc) as prior_{{feature.grain}}_{{feature.source_col}} 
+from {{eol_table.name}} join a on {{eol_table.name}}.{{table.eol_key}} = a.{{table.pk}} where {{time_series_time_window(eol_table, table, feature)}} order by {{eol_table.name}}.{{eol_table.entity.name}}, agg_date desc),
+c as (select {{eol_table.entity.name}}, {{eol_table.observation_date.name}}, agg_date, {{feature.grain}}_{{feature.source_col}}, prior_{{feature.grain}}_{{feature.source_col}},
+    case when prior_{{feature.grain}}_{{feature.source_col}} = 0 then 1 else ({{feature.grain}}_{{feature.source_col}} / prior_{{feature.grain}}_{{feature.source_col}}) end as {{feature.source_col}}_growth from b),
+d as (select {{eol_table.entity.name}},{{eol_table.observation_date.name}}, {{geometric_growth(feature.source_col)}} as {{feature.name}} from c group by {{eol_table.entity.name}}, {{eol_table.observation_date.name}})
+select * from d;
