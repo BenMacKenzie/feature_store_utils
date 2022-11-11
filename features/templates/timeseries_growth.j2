@@ -9,11 +9,11 @@ and agg_date >= dateadd({{feature.grain}}, -{{feature.window_length}}, {{eol_tab
 {%- endmacro -%}
 
 {% macro geometric_growth(col, length) -%}
-pow(exp(sum(ln({{col}}_growth))), 1/(length-1))
+pow(exp(sum(ln({{col}}_growth))), 1/({{length}}-1))
 {%- endmacro -%}
 
 {% macro average_growth(col, length) -%}
-sum({{col}}_growth) /  (1/(length -1))
+sum({{col}}_growth) /  (1/({{length}} -1))
 {%- endmacro -%}
 
 
