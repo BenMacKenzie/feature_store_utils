@@ -1,0 +1,115 @@
+schema: ben_churn_model
+
+eol_table: 
+  name: renewal_eol
+  entity: 
+    name: customer_id
+    type: int
+  observation_date: 
+    name: renewal_date
+    type: date
+  label: 
+    name: commit
+    type: boolean
+  
+calendar: dim_calendar
+
+tables:
+- source_table_name: dbu
+  name: dbu
+  type: time_series
+  pk: customer_id
+  eol_key: customer_id
+  date: date
+  grain: day
+   
+- source_table_name: customers
+  name: customers
+  type: dimension_type2
+  pk: customer_id
+  eol_key: customer_id
+  row_effective_from: row_effective_from
+  row_expiration: row_expiration
+ 
+- source_table_name: customer_support
+  name: customer_support
+  type: fact
+  pk: customer_id
+  eol_key: customer_id
+  date: date
+ 
+features:
+- name: tier
+  data_type: string
+  table: customers
+  type: lookup
+  source_col: tier
+  scalar_function: upper
+  default_value: 'standard'
+ 
+- name: 6_month_growth_sql_dbu
+  data_type: float
+  table: dbu
+  default_value: 1
+  type: time_series_aggregate
+  function: geometric_average
+  source_col: sql_dbu
+  grain: month
+  time_boundary: lastCompleteMonth
+  window_length: 6
+  offset:
+    grain: month
+    length: 0
+
+- name: 6_month_growth_job_dbu
+  data_type: float
+  table: dbu
+  default_value: 1
+  type: time_series_aggregate
+  function: geometric_average
+  source_col: job_dbu
+  grain: month
+  time_boundary: lastCompleteMonth
+  window_length: 6
+  offset:
+    grain: month
+    length: 0
+    
+
+- name: customer_service_count
+  data_type: int
+  table: customer_support
+  default_value: 0
+  type: fact_aggregate
+  function: count
+  source_col: channel
+  grain: week
+  window_length: 8
+  filter: 
+    column: channel
+    operator: '='
+    value: "'phone'"
+    
+  
+feature_store:
+
+  - name: dbu_growth
+    type: regular
+    entity_table: customers
+    pk: customer_id
+    grain: week
+    start_date: 2021-01-01
+    end_date: 2022-08-01
+    features:
+      - 6_month_growth_sql_dbu
+      - 6_month_growth_job_dbu
+
+  - name: customer_service_calls
+    type: regular
+    entity_table: customers
+    pk: customer_id
+    grain: week
+    start_date: 2021-01-01
+    end_date: 2022-08-01
+    features:
+      - customer_service_count
