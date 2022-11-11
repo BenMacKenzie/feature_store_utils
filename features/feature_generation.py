@@ -1,13 +1,14 @@
 import yaml
-import collections
 from datetime import datetime
-from jinja2 import Environment, FileSystemLoader, Template, PackageLoader
+from jinja2 import Environment, PackageLoader
 from pyspark.sql import SparkSession
 from databricks.feature_store.client import FeatureStoreClient
 import time
 import os
 from dotenv import find_dotenv
 from pkg_resources import resource_filename
+from hyper_feature import get_hyper_feature
+
 
 queries = {}
 features = {}
@@ -18,7 +19,12 @@ data_spec = {}
 
 def add_features(data_spec):
     for f in data_spec['features']:
-        features[f['name']] = f
+        if f['name'].endswith('*'):
+            multi_features = get_hyper_feature(f)
+            for mf in multi_features:
+                features[mf['name']] = mf
+        else:
+            features[f['name']] = f
 
 
 def add_tables(data_spec):
