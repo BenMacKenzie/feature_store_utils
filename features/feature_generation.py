@@ -7,7 +7,7 @@ import time
 import os
 from dotenv import find_dotenv
 from pkg_resources import resource_filename
-from hyper_feature import get_hyper_feature
+from features.hyper_feature import get_hyper_feature
 
 
 queries = {}
