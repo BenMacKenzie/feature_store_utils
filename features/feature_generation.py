@@ -16,6 +16,10 @@ tables = {}
 feature_tables = {}
 data_spec = {}
 
+catalog_name = None
+schema_name = None
+fq_schema_name = None
+
 
 def add_features(data_spec):
     for f in data_spec['features']:
@@ -108,6 +112,7 @@ def register_dimension_table(table):
 
 
 def build_feature_table(feature_table, drop_existing=False, update=False):
+
     schema = data_spec['schema']
     spark.sql(f"use database {schema}")
 
@@ -147,9 +152,9 @@ def build_feature_table(feature_table, drop_existing=False, update=False):
     for feature_name in feature_table['features']:
         if feature_name.endswith('*'):
             prefix = feature_name[:-1]
-            for f in features:
-                if f.name.startswith(prefix):
-                    feature_list.append(f.name)
+            for key in features:
+                if key.startswith(prefix):
+                    feature_list.append(key)
         else:
             feature_list.append(feature_name)
 
