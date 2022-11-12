@@ -1,6 +1,6 @@
 # feature_store_utils
 
-### some general thoughts on buliding a training dataset
+### some general thoughts on building a training dataset
 https://docs.google.com/presentation/d/1tVkrwCLVwFp8cZC7CmAHSNFhsJrcTdC20MlZfptkSBE/edit?usp=sharing
 
 
