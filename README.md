@@ -11,9 +11,7 @@ https://docs.google.com/presentation/d/1tVkrwCLVwFp8cZC7CmAHSNFhsJrcTdC20MlZfptk
 
 
 
-### notes
-
-Notes
+### Notes
 
 1. Current version is very primitive. Not clear that Jinja is the right way to write parameterized SQL. Might be better to do in Python.
 2. Current version is not optimized. Each feature is calculated individually whereas if table, filters and time windows are identical, multiple aggregation features can be calculated simultaneously. 
@@ -26,7 +24,7 @@ Notes
 9. The demo repo (https://github.com/BenMacKenzie/churn_model_demo) illustrates 'hyper-features' which are features with variable parameters. 
 
 
-### to build: 
+### Building
 
 note that you need a token to do this...probably I am the only one who can push to testpypi at the moment.
 
