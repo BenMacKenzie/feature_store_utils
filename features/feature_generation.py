@@ -143,7 +143,17 @@ def build_feature_table(feature_table, drop_existing=False, update=False):
     if drop_existing:
         fs.drop_table(f_table_name)
 
+    feature_list = []
     for feature_name in feature_table['features']:
+        if feature_name.endswith('*'):
+            prefix = feature_name[:-1]
+            for f in features:
+                if f.name.startswith(prefix):
+                    feature_list.append(f.name)
+        else:
+            feature_list.append(feature_name)
+
+    for feature_name in feature_list:
         select_clause = get_sql_for_feature(feature_name, eo_table)
         feature_df = spark.sql(select_clause)
 
