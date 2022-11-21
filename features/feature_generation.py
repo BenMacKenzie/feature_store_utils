@@ -94,7 +94,7 @@ def create_eo_table(entity_table, pk, start_date, end_date, grain, eo_table_name
 
     sql = f"with entities as (select distinct {pk} from {entity_table}), observation_dates as (select distinct {date_col} as observation_date from {calendar_table}) select {pk}, observation_date from observation_dates cross join entities \
     where observation_date >= dateadd({grain}, -1, to_date('{start_date}')) and observation_date <= to_date('{end_date}')"
-    print(sql)
+    
 
     spark.sql(sql).createOrReplaceTempView(eo_table_name)
 

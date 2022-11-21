@@ -6,7 +6,7 @@ eol_table:
     name: customer_id
     type: int
   observation_date: 
-    name: renewal_date
+    name: observation_date
     type: date
   label: 
     name: commit
