@@ -45,7 +45,7 @@ features:
   type: lookup
   source_col: tier
   scalar_function: upper
-  default_value: 'standard'
+  default_value: 'STANDARD'
  
 - name: 6_month_growth_sql_dbu
   data_type: float

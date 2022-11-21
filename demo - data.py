@@ -139,9 +139,4 @@ display(training_df)
 
 # COMMAND ----------
 
-# MAGIC %sql
-# MAGIC select * from ben_churn_model.customer_service_calls where customer_id=101401
-
-# COMMAND ----------
-
 
