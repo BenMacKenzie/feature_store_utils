@@ -136,4 +136,9 @@ spark.createDataFrame(customer_support_df).write.format('delta').mode('overwrite
 
 # COMMAND ----------
 
+# MAGIC %sql
+# MAGIC select * from customer_support;
+
+# COMMAND ----------
+
 

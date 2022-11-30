@@ -1,0 +1,92 @@
+schema: feature_utils_test
+
+eol_table: 
+  name: renewal_eol
+  entity: 
+    name: customer
+    type: int
+  observation_date: 
+    name: renewal_date
+    type: date
+  label: 
+    name: churn
+    type: boolean
+  
+calendar: dim_calendar
+
+tables:
+- source_table_name: dbu
+  name: dbu
+  type: time_series
+  pk: customer_id
+  eol_key: customer
+  date: date
+  grain: day
+   
+- source_table_name: customers
+  name: customers
+  type: dimension_type2
+  pk: customer_id
+  eol_key: customer
+  row_effective_from: row_effective_from
+  row_expiration: row_expiration
+ 
+- source_table_name: customer_support
+  name: customer_support
+  type: fact
+  pk: customer_id
+  eol_key: customer
+  date: date
+ 
+features:
+ 
+- name: 6_day_geometric_growth_sql_dbu
+  data_type: float
+  table: dbu
+  default_value: 1
+  type: time_series_aggregate
+  function: geometric_average
+  source_col: dbu
+  grain: day
+  time_boundary: calendarDate
+  window_length: 6
+  offset:
+    grain: month
+    length: 0
+
+- name: 6_day_average_growth_sql_dbu
+  data_type: float
+  table: dbu
+  default_value: 1
+  type: time_series_aggregate
+  function: average_growth
+  source_col: dbu
+  grain: day
+  time_boundary: calendarDate
+  window_length: 6
+  offset:
+    grain: month
+    length: 0
+  
+feature_store:
+
+  - name: dbu_growth
+    type: regular
+    entity_table: customers
+    pk: customer_id
+    grain: week
+    start_date: 2021-01-01
+    end_date: 2022-08-01
+    features:
+      - 6_month_growth_sql_dbu
+      - 6_month_growth_job_dbu
+
+  - name: customer_service_calls
+    type: regular
+    entity_table: customers
+    pk: customer_id
+    grain: week
+    start_date: 2021-01-01
+    end_date: 2022-08-01
+    features:
+      - customer_service_count
