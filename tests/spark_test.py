@@ -14,5 +14,5 @@ def test_spark(spark):
     """
     Example test that needs to run on the cluster to work
     """
-    data = spark.sql("select 1").collect()
+    data = spark.sql("select 4").collect()
     assert data[0][0] == 1

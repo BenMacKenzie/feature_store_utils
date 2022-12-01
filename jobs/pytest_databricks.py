@@ -4,7 +4,7 @@ import sys
 
 # Run all tests in the repository root.
 
-repo_root = os.path.dirname(os.path.dirname(__file__))
+repo_root = os.path.dirname(os.getcwd())
 os.chdir(repo_root)
 
 # Skip writing pyc files on a readonly filesystem.
