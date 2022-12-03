@@ -1,4 +1,4 @@
-schema: ben_churn_model
+schema: feature_utils_test
 
 eol_table: 
   name: renewal_eol
@@ -90,7 +90,34 @@ features:
     operator: '='
     value: "'phone'"
     
-  
+- name: 6_day_geometric_growth_sql_dbu
+  data_type: float
+  table: dbu
+  default_value: 1
+  type: time_series_aggregate
+  function: geometric_average
+  source_col: dbu
+  grain: day
+  time_boundary: calendarDate
+  window_length: 6
+  offset:
+    grain: month
+    length: 0
+
+- name: 6_day_average_growth_sql_dbu
+  data_type: float
+  table: dbu
+  default_value: 1
+  type: time_series_aggregate
+  function: average_growth
+  source_col: dbu
+  grain: day
+  time_boundary: calendarDate
+  window_length: 6
+  offset:
+    grain: month
+    length: 0
+
 feature_store:
 
   - name: dbu_growth

@@ -3,7 +3,7 @@ schema: feature_utils_test
 eol_table: 
   name: renewal_eol
   entity: 
-    name: customer
+    name: customer_id
     type: int
   observation_date: 
     name: renewal_date
@@ -19,7 +19,7 @@ tables:
   name: dbu
   type: time_series
   pk: customer_id
-  eol_key: customer
+  eol_key: customer_id
   date: date
   grain: day
    
@@ -27,7 +27,7 @@ tables:
   name: customers
   type: dimension_type2
   pk: customer_id
-  eol_key: customer
+  eol_key: customer_id
   row_effective_from: row_effective_from
   row_expiration: row_expiration
  

@@ -176,7 +176,20 @@ def build_feature_table(feature_table, drop_existing=False, update=False):
         fs.create_table(f_table_name, primary_keys=feature_table['pk'], timestamp_keys='observation_date', df=df)
 
 
-def build_training_data_set():
+def build_training_data_set(data_spec=None):
+    
+    if data_spec is not None:
+        load(data_spec)
+    else:
+        with open(get_feature_set_location(), "r") as stream:
+            try:
+                data_spec = yaml.safe_load(stream)
+            except yaml.YAMLError as exc:
+             print(exc)
+        load(data_spec)
+
+
+
     eol_table = data_spec['eol_table']
     eol_table_name = eol_table['name']
     entity_name = eol_table['entity']['name']
@@ -213,16 +226,15 @@ def get_feature_set_location():
     feature_yaml = os.path.join(os.path.dirname(find_dotenv()), 'features.yaml')
     return feature_yaml
 
+def load(d):
+    global data_spec 
+    data_spec = d
+    add_features(d)
+    add_tables(d)
+    add_feature_tables(d)
 
-with open(get_feature_set_location(), "r") as stream:
-    try:
-        data_spec = yaml.safe_load(stream)
-    except yaml.YAMLError as exc:
-        print(exc)
 
-add_features(data_spec)
-add_tables(data_spec)
-add_feature_tables(data_spec)
+
 environment = Environment(loader=PackageLoader('features', 'templates'))
 spark = SparkSession.builder.getOrCreate()
 fs = FeatureStoreClient()
