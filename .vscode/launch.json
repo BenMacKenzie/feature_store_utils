@@ -8,7 +8,7 @@
         "type": "databricks",
         "request": "launch",
         "name": "Unit Tests (on Databricks)",
-        "program": "${workspaceFolder}/jobs/pytest_databricks.py",
+        "program": "${workspaceFolder}/remote_test_harness/pytest_databricks.py",
         "args": ["./tests"],
         "env": {}
       }

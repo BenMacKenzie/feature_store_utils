@@ -111,6 +111,10 @@ def register_dimension_table(table):
         fs.register_table(delta_table=f"{schema}.{source_table_name}", primary_keys=pk)
 
 
+def update_feature_table(feature_table):
+    build_feature_table(feature_table, drop_existing=False, update=True)
+
+
 def build_feature_table(feature_table, drop_existing=False, update=False):
 
     schema = data_spec['schema']
