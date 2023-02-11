@@ -29,9 +29,6 @@ https://docs.google.com/presentation/d/1tVkrwCLVwFp8cZC7CmAHSNFhsJrcTdC20MlZfptk
   - functions of features (e.g., ratio of growth in job dbu to interactive dbu).  Arguably this is not needed for boosted trees. Might be useful for neural nets...but why use a nueral net on heterogeneous data? (actually this kind of thing can be good for model explainability)
 4. Need to illustrate adding features from a related dimension table (using a foreign key...machinery is in place to do so.)
 5. Current version illustrates creating a pipeline which uses the api.  But it would be nice just to generate the code and write it to a notebook so that the package is invisible in production (like bamboolib) 
-6. Use https://docs.python-cerberus.org/en/stable/usage.html#basic-usage to validate feature definition?
-7. Need to improve transition between laptop/ide and databricks (create an actual spark session in IDE?)
-8. There is no error checking and no unit tests.
 9. The demo repo (https://github.com/BenMacKenzie/churn_model_demo) illustrates 'hyper-features' which are features with variable parameters. 
 10. Connecting 'hyper-features' to feature store needs to be worked out.  Currently the option is to add all of them or specify individual version by their (generated) name
 11. Fix feature store feature gen observation dates.  Align with grain of feature, e.g., if grain is monthly make sure feature store contains an observation on first of month.
@@ -46,5 +43,15 @@ python3 -m build
 python3 -m twine upload --repository testpypi dist/*
 
 ```
+
+
+### Running unit tests on databricks
+
+1. install the databricks extension for vscode
+2. use this repo as a template.  Note the following:
+3. remote_test_harness/pytest_databricks.py
+4. .vscode/launch.json 
+5. write tests as usual (see tests/time_series/time_series_test.py as an example)
+
 
  

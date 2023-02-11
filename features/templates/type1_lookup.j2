@@ -1,0 +1,7 @@
+ select {{eol_table.name}}.{{eol_table.entity.name}}, {{eol_table.name}}.{{eol_table.observation_date.name}},
+{% if feature.scalar_function is defined %} {{feature.scalar_function}}({{feature.source_col}}) as {{feature.name}} 
+{% elif feature.inline_function is defined %} {{feature.inline_function}} as {{feature.name}} 
+{%else%}{{feature.source_col}} as {{feature.name}}{% endif %}
+from {{eol_table.name}} join {{table.source_table_name}} on {{eol_table.name}}.{{table.eol_key}} = {{table.source_table_name}}.{{table.pk}}
+
+

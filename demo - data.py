@@ -57,7 +57,7 @@
 
 # COMMAND ----------
 
-from features.feature_generation import build_training_data_set,feature_tables, build_feature_table, register_dimension_table, tables 
+from features.feature_generation import build_training_data_set
 df = build_training_data_set()
 
 # COMMAND ----------
