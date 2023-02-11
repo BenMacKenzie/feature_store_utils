@@ -60,6 +60,7 @@
 from features.feature_generation import build_training_data_set
 df = build_training_data_set()
 
+
 # COMMAND ----------
 
 display(df)
@@ -72,6 +73,10 @@ display(df)
 
 # COMMAND ----------
 
+#fix..this will fail if build_training_dataset not called first...data structures are not initialized
+from features.feature_generation import build_feature_table
+from features.feature_spec import get_feature_tables
+feature_tables = get_feature_tables()
 build_feature_table(feature_tables['customer_service_calls'], drop_existing=True)
 
 # COMMAND ----------
@@ -85,6 +90,9 @@ build_feature_table(feature_tables['dbu_growth'], drop_existing=True)
 
 # COMMAND ----------
 
+from features.feature_generation import register_dimension_table
+from features.feature_spec import get_tables
+tables = get_tables()
 register_dimension_table(tables['customers'])
 
 # COMMAND ----------

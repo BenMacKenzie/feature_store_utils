@@ -29,6 +29,6 @@ features:
   data_type: string
   table: customer
   type: lookup
-  inline_function: upper(regexp_extract({{email}}, "(?<=@)[^.]+(?=\\.)", 0))
+  inline_function: upper(regexp_extract(email, "(?<=@)[^.]+(?=\\.)", 0))
   default_value: 'UNKNOWN'
  

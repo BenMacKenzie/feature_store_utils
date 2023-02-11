@@ -31,6 +31,7 @@ def create_eo_table(entity_table, pk, start_date, end_date, grain, eo_table_name
 
 def build_feature_table(feature_table, drop_existing=False, update=False):
     data_spec = get_data_spec()
+    features = get_features()
     schema = data_spec['schema']
     spark.sql(f"use database {schema}")
 

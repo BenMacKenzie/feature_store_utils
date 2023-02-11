@@ -46,6 +46,13 @@ features:
   source_col: tier
   scalar_function: upper
   default_value: 'STANDARD'
+  
+- name: email_domeain
+  data_type: string
+  table: customers
+  type: lookup
+  inline_function: upper(regexp_extract(email, "(?<=@)[^.]+(?=\\.)", 0))
+  default_value: 'UNKNOWN'
  
 - name: 6_month_growth_sql_dbu
   data_type: float
