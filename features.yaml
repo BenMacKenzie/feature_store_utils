@@ -47,7 +47,7 @@ features:
   scalar_function: upper
   default_value: 'STANDARD'
   
-- name: email_domeain
+- name: email_domain
   data_type: string
   table: customers
   type: lookup

@@ -99,6 +99,7 @@ register_dimension_table(tables['customers'])
 
 # MAGIC %md
 # MAGIC #### observe that now we can build the same training data set using the feature store directly
+# MAGIC ** fix *** email_domain is not in customers table, so can't just register it as is.
 
 # COMMAND ----------
 
