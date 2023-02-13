@@ -1,42 +1,18 @@
 {
-  // Use IntelliSense to learn about possible attributes.
-  // Hover to view descriptions of existing attributes.
-  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
-  "version": "0.2.0",
-  "configurations": [
-    {
-      "name": "Python: Current File",
-      "type": "python",
-      "request": "launch",
-      "program": "python",
-      "console": "integratedTerminal",
-      "justMyCode": true,
-    
-    },
-    {
-      "type": "databricks",
-      "request": "launch",
-      "name": "Unit Tests (on Databricks)",
-      "program": "${workspaceFolder}/remote_test_harness/pytest_databricks.py",
-      "args": [
-        "./tests"
-      ],
-    },
-    {
-      "type": "python",
-      "request": "launch",
-      "name": "Local Unit Tests ",
-      "module": "pytest",
-      "args": [
-        "tests/local_tests/"
-      ],
-      "env": {}
-    },
-    {
-      "type": "python",
-      "request": "launch",
-      "name": "run file",
-      "env": {}
-    }
-  ]
-}
+
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "type": "databricks",
+        "request": "launch",
+        "name": "Unit Tests (on Databricks)",
+        "program": "${workspaceFolder}/remote_test_harness/pytest_databricks.py",
+        "args": ["./tests"],
+        "env": {}
+      }
+    ]
+  }
+

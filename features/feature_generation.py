@@ -29,6 +29,24 @@ def create_eo_table(entity_table, pk, start_date, end_date, grain, eo_table_name
     spark.sql(sql).createOrReplaceTempView(eo_table_name)
 
 
+
+def register_dimension_table(table):
+    schema = data_spec['schema']
+    spark.sql(f"use database {schema}")
+    source_table_name = table['source_table_name']
+    pk = table['pk']
+    if table['type'] == 'dimension_type2':
+        timestamp_key = table['row_effective_from']
+        fs.register_table(delta_table=f"{schema}.{source_table_name}", primary_keys=pk, timestamp_keys=timestamp_key)
+    else:
+        fs.register_table(delta_table=f"{schema}.{source_table_name}", primary_keys=pk)
+
+
+def update_feature_table(feature_table):
+    build_feature_table(feature_table, drop_existing=False, update=True)
+
+
+
 def build_feature_table(feature_table, drop_existing=False, update=False):
     data_spec = get_data_spec()
     features = get_features()
