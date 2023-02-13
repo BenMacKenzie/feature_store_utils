@@ -4,12 +4,17 @@
 
 # COMMAND ----------
 
+# MAGIC %md
+# MAGIC adding a new cell
+
+# COMMAND ----------
+
 # MAGIC %sql
 # MAGIC use ben_churn_model
 
 # COMMAND ----------
 
-eol_df = spark.sql('select customer_id, to_date(dateadd(month, -3, renewal_date)) as renewal_date, case when commit then 1 else 0 end as commit from salesforce where contract_length =3')
+eol_df = spark.sql('select customer_id, to_date(dateadd(month, -2, renewal_date)) as renewal_date, case when commit then 1 else 0 end as commit from salesforce where contract_length =3')
 
 # COMMAND ----------
 
@@ -43,10 +48,10 @@ feature_lookups = [
     )
       
 ]
-renewal_eol_df = spark.sql('select * from renewal_eol')
+#renewal_eol_df = spark.sql('select * from renewal_eol')
 
 training_set = fs.create_training_set(
-    renewal_eol_df,
+    eol_df,
     feature_lookups = feature_lookups,
     label = 'commit',
     exclude_columns = ['customer_id', 'renewal_date']
@@ -95,8 +100,8 @@ with mlflow.start_run():
   training_df = training_set.load_df().toPandas()
 
  
-  X_train = training_df.drop(['renew'], axis=1)
-  y_train = training_df.renew
+  X_train = training_df.drop(['commit'], axis=1)
+  y_train = training_df.commit
 
   model.fit(X_train, y_train)
 

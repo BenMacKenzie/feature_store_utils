@@ -1,7 +1,5 @@
 import itertools
 
-
-
 def flatten(d, parent_key='', sep='.'):
     items = []
     for k, v in d.items():

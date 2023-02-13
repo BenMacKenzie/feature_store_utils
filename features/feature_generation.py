@@ -1,85 +1,15 @@
-import yaml
-from datetime import datetime
-from jinja2 import Environment, PackageLoader
 from pyspark.sql import SparkSession
 from databricks.feature_store.client import FeatureStoreClient
 import time
-import os
-from dotenv import find_dotenv
-from pkg_resources import resource_filename
-from features.hyper_feature import get_hyper_feature
-
-
-queries = {}
-features = {}
-tables = {}
-feature_tables = {}
-data_spec = {}
-
-catalog_name = None
-schema_name = None
-fq_schema_name = None
-
-
-def add_features(data_spec):
-    for f in data_spec['features']:
-        if f['name'].endswith('*'):
-            multi_features = get_hyper_feature(f)
-            for mf in multi_features:
-                features[mf['name']] = mf
-        else:
-            features[f['name']] = f
-
-
-def add_tables(data_spec):
-    for t in data_spec['tables']:
-        tables[t['name']] = t
-
-
-def add_feature_tables(data_spec):
-    for t in data_spec['feature_store']:
-        feature_tables[t['name']] = t
-
-
-def get_jinja_map(feature_spec, table):
-    m = {}
-    m['dim_calendar'] = data_spec['calendar']
-    m['eol_table'] = data_spec['eol_table']
-    m['table'] = table
-    m['feature'] = feature_spec
-    return m
-
-
-def get_query_template(feature, table):
-    if feature['type'] == 'time_series_aggregate':
-        template = environment.get_template("timeseries_growth.j2")
-    elif feature['type'] == 'lookup' and table['type'] == 'dimension_type2':
-        template = environment.get_template("type2_lookup.j2")
-    elif feature['type'] == 'fact_aggregate':
-        template = environment.get_template("fact_aggregations.j2")
-    return template
-
-
-def get_sql_for_feature(feature_name, eo_table=None):
-    feature_spec = features[feature_name]
-    table = tables[feature_spec['table']]
-    m = get_jinja_map(feature_spec, table)
-    if eo_table is not None:
-        m['eol_table'] = eo_table
-
-    template = get_query_template(feature_spec, table)
-    sql = template.render(m)
-    return sql
-
-
-def test_sql():
-    sql = []
-    for feature_name, features_spec in features.items():
-        sql.append(get_sql_for_feature(feature_name))
-    return sql
+import datetime
+from features.sql_gen import get_sql_for_feature
+from pyspark.sql import SparkSession
+from databricks.feature_store.client import FeatureStoreClient
+from features.feature_spec import load_data_spec, get_data_spec, get_features
 
 
 def create_eo_table(entity_table, pk, start_date, end_date, grain, eo_table_name):
+    data_spec=get_data_spec()
     calendar_table = data_spec['calendar']
     schema = data_spec['schema']
 
@@ -99,6 +29,7 @@ def create_eo_table(entity_table, pk, start_date, end_date, grain, eo_table_name
     spark.sql(sql).createOrReplaceTempView(eo_table_name)
 
 
+
 def register_dimension_table(table):
     schema = data_spec['schema']
     spark.sql(f"use database {schema}")
@@ -115,8 +46,10 @@ def update_feature_table(feature_table):
     build_feature_table(feature_table, drop_existing=False, update=True)
 
 
-def build_feature_table(feature_table, drop_existing=False, update=False):
 
+def build_feature_table(feature_table, drop_existing=False, update=False):
+    data_spec = get_data_spec()
+    features = get_features()
     schema = data_spec['schema']
     spark.sql(f"use database {schema}")
 
@@ -180,20 +113,14 @@ def build_feature_table(feature_table, drop_existing=False, update=False):
         fs.create_table(f_table_name, primary_keys=feature_table['pk'], timestamp_keys='observation_date', df=df)
 
 
-def build_training_data_set(data_spec=None):
+def update_feature_table(feature_table):
+    build_feature_table(feature_table, drop_existing=False, update=True)
+
+
+def build_training_data_set(d=None):
+    data_spec = load_data_spec(d)
+    features = get_features()
     
-    if data_spec is not None:
-        load(data_spec)
-    else:
-        with open(get_feature_set_location(), "r") as stream:
-            try:
-                data_spec = yaml.safe_load(stream)
-            except yaml.YAMLError as exc:
-             print(exc)
-        load(data_spec)
-
-
-
     eol_table = data_spec['eol_table']
     eol_table_name = eol_table['name']
     entity_name = eol_table['entity']['name']
@@ -221,24 +148,19 @@ def build_training_data_set(data_spec=None):
     return df
 
 
-def get_template_location():
-    filepath = resource_filename('features', 'templates')
-    return filepath
-
-
-def get_feature_set_location():
-    feature_yaml = os.path.join(os.path.dirname(find_dotenv()), 'features.yaml')
-    return feature_yaml
-
-def load(d):
-    global data_spec 
-    data_spec = d
-    add_features(d)
-    add_tables(d)
-    add_feature_tables(d)
+def register_dimension_table(table):
+    data_spec=get_data_spec()
+    schema = data_spec['schema']
+    spark.sql(f"use database {schema}")
+    source_table_name = table['source_table_name']
+    pk = table['pk']
+    if table['type'] == 'dimension_type2':
+        timestamp_key = table['row_effective_from']
+        fs.register_table(delta_table=f"{schema}.{source_table_name}", primary_keys=pk, timestamp_keys=timestamp_key)
+    else:
+        fs.register_table(delta_table=f"{schema}.{source_table_name}", primary_keys=pk)
 
 
 
-environment = Environment(loader=PackageLoader('features', 'templates'))
 spark = SparkSession.builder.getOrCreate()
 fs = FeatureStoreClient()

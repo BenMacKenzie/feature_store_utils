@@ -4,7 +4,7 @@ from datetime import date, timedelta
 import pandas as pd
 from pathlib import Path
 import yaml
-from features.feature_generation import build_training_data_set,feature_tables, build_feature_table, register_dimension_table, tables 
+from features.feature_generation import build_training_data_set
 
 
 @pytest.fixture
