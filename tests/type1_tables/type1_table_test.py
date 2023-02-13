@@ -20,12 +20,12 @@ def test_type1_lookup(spark):
     spark.sql('create schema if not exists feature_utils_test')
     spark.sql('use feature_utils_test')
 
-    spark.sql("create or replace table customers (customer_id int, email string)")
-    spark.sql("insert into table customers values (101, 'ben.mackenzie@databricks.com')")
-    spark.sql("insert into table customers values (102, 'benmackenzie@gmail.com')")
+    spark.sql("create or replace table customer (customer_id int, email string)")
+    spark.sql("insert into table customer values (101, 'ben.mackenzie@databricks.com')")
+    spark.sql("insert into table customer values (102, 'benmackenzie@gmail.com')")
 
     
-    spark.sql("create or replace table renewal_eol (customer_id int, renewal_date date, commit boolean);")
+    spark.sql("create or replace table renewal_eol (id int, renewal_date date, commit boolean);")
     spark.sql("insert into table renewal_eol values (101, \"2019-01-20\", true)")
     spark.sql("insert into table renewal_eol values (102, \"2022-01-20\", true)")
 

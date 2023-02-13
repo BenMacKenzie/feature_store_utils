@@ -1,10 +1,11 @@
 
-import pytest
+
 from datetime import date, timedelta
-import pandas as pd
+
 from pathlib import Path
 import yaml
-from features.sql_gen import load, get_sql_for_feature
+from features.sql_gen import get_sql_for_feature
+from features.feature_spec import load
 
 
 def test_type1():
@@ -17,7 +18,7 @@ def test_type1():
 
 
 
-test_type1()   
+#test_type1()   
 
 
   

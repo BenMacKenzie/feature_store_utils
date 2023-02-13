@@ -15,8 +15,6 @@ eol_table:
 calendar: dim_calendar
 
 tables:
-
-   
 - source_table_name: customer
   name: customer
   type: dimension_type1
@@ -25,10 +23,10 @@ tables:
   
  
 features:
-  name: current_email_domain
-  data_type: string
-  table: customer
-  type: lookup
-  inline_function: upper(regexp_extract(email, "(?<=@)[^.]+(?=\\.)", 0))
-  default_value: 'UNKNOWN'
+  - name: current_email_domain
+    data_type: string
+    table: customer
+    type: lookup
+    inline_function: upper(regexp_extract(email, "(?<=@)[^.]+(?=\\.)", 0))
+    default_value: 'UNKNOWN'
  
