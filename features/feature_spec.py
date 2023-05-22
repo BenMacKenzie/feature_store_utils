@@ -38,11 +38,12 @@ def get_feature_set_location():
 
 
 def load(d):
-    global data_spec 
+    global data_spec
     data_spec = d
     add_features(d)
     add_tables(d)
     add_feature_tables(d)
+   
 
 def load_data_spec(data_spec=None):
     if data_spec is not None:

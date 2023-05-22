@@ -41,6 +41,7 @@ def test_growth(spark):
     with open('tests/time_series/features.yaml', "r") as stream:
         data_spec = yaml.safe_load(stream)
 
+    print(data_spec)
     df = build_training_data_set(data_spec)
     pdf = df.toPandas()
     assert pdf.iloc[0]['6_day_geometric_growth_sql_dbu']==1.05

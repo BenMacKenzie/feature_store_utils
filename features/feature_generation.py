@@ -5,7 +5,7 @@ import datetime
 from features.sql_gen import get_sql_for_feature
 from pyspark.sql import SparkSession
 from databricks.feature_store.client import FeatureStoreClient
-from features.feature_spec import load_data_spec, get_data_spec, get_features
+from features.feature_spec import load_data_spec, get_data_spec, get_features, get_feature_tables
 
 
 def create_eo_table(entity_table, pk, start_date, end_date, grain, eo_table_name):
@@ -47,8 +47,10 @@ def update_feature_table(feature_table):
 
 
 
-def build_feature_table(feature_table, drop_existing=False, update=False):
-    data_spec = get_data_spec()
+def build_feature_table(feature_table_name, drop_existing=False, update=False):
+    data_spec = load_data_spec()
+    feature_tables = get_feature_tables()
+    feature_table = feature_tables[feature_table_name]
     features = get_features()
     schema = data_spec['schema']
     spark.sql(f"use database {schema}")
