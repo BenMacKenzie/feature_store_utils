@@ -34,13 +34,6 @@ https://docs.google.com/presentation/d/1tVkrwCLVwFp8cZC7CmAHSNFhsJrcTdC20MlZfptk
 11. Fix feature store feature gen observation dates.  Align with grain of feature, e.g., if grain is monthly make sure feature store contains an observation on first of month.
 
 
-### Building
-
-note that you need a token to do this...probably I am the only one who can push to testpypi at the moment.
-
-```
-python3 -m build  
-python3 -m twine upload --repository testpypi dist/*
 
 ```
 
