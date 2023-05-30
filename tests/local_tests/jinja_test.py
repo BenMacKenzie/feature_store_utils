@@ -18,7 +18,7 @@ def test_type1():
 
 
 
-#test_type1()   
+test_type1()   
 
 
   

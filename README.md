@@ -36,11 +36,13 @@ https://docs.google.com/presentation/d/1tVkrwCLVwFp8cZC7CmAHSNFhsJrcTdC20MlZfptk
 
 ### Building
 
-note that you need a token to do this...probably I am the only one who can push to testpypi at the moment.
+
 
 ```
 python3 -m build  
 python3 -m twine upload --repository testpypi dist/*
+
+python3 -m twine upload dist/*
 
 ```
 

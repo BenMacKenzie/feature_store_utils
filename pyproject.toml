@@ -3,12 +3,12 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "ben_mackenzie_features"
-version = "0.0.17"
+name = "feature_store_utils"
+version = "0.0.3"
 authors = [
   { name="Example Author", email="author@example.com" },
 ]
-description = "A small example package"
+description = "A utility to generate ML features from yaml"
 readme = "README.md"
 requires-python = ">=3.7"
 classifiers = [
@@ -18,7 +18,6 @@ classifiers = [
 ]
 dependencies = [
     'python-dotenv',
-    'pyspark',
     'databricks-feature-store',
     'Jinja2',
     'pandas',
@@ -27,3 +26,4 @@ dependencies = [
 
 [tool.setuptools.package-data]
 "features.templates" = ["*.j2"]
+
