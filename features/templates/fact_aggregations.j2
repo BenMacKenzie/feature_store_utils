@@ -1,7 +1,7 @@
 {% macro fact_agg_time_window(eol_table, table, feature) -%}
 {% if feature.offset is defined %}
 {{table.source_table_name}}.{{table.date}} <= dateadd({{feature.offset.grain}}, -{{feature.offset.length}},{{eol_table.name}}.{{eol_table.observation_date.name}}) and
-{{table.source_table_name}}.{{table.date}} > dateadd({{feature.offset.grain}},-{{feature.offset.length}}, dateadd({{feature.grain}}, -{feature.window_length}}))
+{{table.source_table_name}}.{{table.date}} > dateadd({{feature.offset.grain}},-{{feature.offset.length}}, dateadd({{feature.grain}}, -{{feature.window_length}}))
 {% else %}
 {{table.source_table_name}}.{{table.date}} <= {{eol_table.name}}.{{eol_table.observation_date.name}} and
 {{table.source_table_name}}.{{table.date}} > dateadd({{feature.grain}}, -{{feature.window_length}}, {{eol_table.name}}.{{eol_table.observation_date.name}})
