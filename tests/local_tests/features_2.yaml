@@ -1,0 +1,109 @@
+schema: streaming_service
+
+eol_table: 
+  name: renewal_eol
+  entity: 
+    name: customer_id
+    type: int
+  observation_date: 
+    name: observation_date
+    type: date
+  label: 
+    name: renew
+    type: boolean
+  
+calendar: dim_calendar
+
+tables:
+- source_table_name: stream_history
+  name: stream_history
+  type: time_series
+  pk: customer_id
+  eol_key: customer_id
+  date: date
+  grain: day
+   
+- source_table_name: customers
+  name: customers
+  type: dimension_type2
+  pk: customer_id
+  eol_key: customer_id
+  row_effective_from: row_effective_from
+  row_expiration: row_expiration
+ 
+- source_table_name: customer_support
+  name: customer_support
+  type: fact
+  pk: customer_id
+  eol_key: customer_id
+  date: date
+ 
+features:
+- name: subscription
+  data_type: string
+  table: customers
+  type: lookup
+  source_col: subscription
+  scalar_function: upper
+  default_value: 'STANDARD'
+- name: email_domain
+  data_type: string
+  table: customers
+  type: lookup
+  inline_function: upper(regexp_extract(email, "(?<=@)[^.]+(?=\\.)", 0))
+  default_value: 'UNKNOWN'
+ 
+- name: total_minutes_watched_prior_month
+  data_type: float
+  table: stream_history
+  default_value: 0
+  type: fact_aggregate
+  function: sum
+  source_col: minutes_watched
+  grain: week
+  window_length: 4
+  offset:
+    grain: month
+    length: 0
+
+- name: titles_viewed_prior_month
+  data_type: int
+  table: stream_history
+  default_value: 1
+  type: time_series_aggregate
+  function: sum
+  source_col: titles_viewed
+  grain: month
+  time_boundary: lastCompleteMonth
+  window_length: 1
+  offset:
+    grain: month
+    length: 0
+
+- name: titles_completed_prior_month
+  data_type: int
+  table: stream_history
+  default_value: 1
+  type: time_series_aggregate
+  function: sum
+  source_col: titles_completed
+  grain: month
+  time_boundary: lastCompleteMonth
+  window_length: 1
+  offset:
+    grain: month
+    length: 0
+
+- name: customer_service_count
+  data_type: int
+  table: customer_support
+  default_value: 0
+  type: fact_aggregate
+  function: count
+  source_col: channel
+  grain: week
+  window_length: 8
+  filter: 
+    column: channel
+    operator: '='
+    value: "'phone'"
