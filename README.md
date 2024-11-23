@@ -10,7 +10,7 @@ https://docs.google.com/presentation/d/1tVkrwCLVwFp8cZC7CmAHSNFhsJrcTdC20MlZfptk
 ### options for use
 
 1. clone this repo.  create features.yaml.  follow demo notebook. do not check back in.
-2. create you own repo and install as package (currently in testpypi).  See https://github.com/BenMacKenzie/churn_model_demo as an example.  Note that you must create a .env file in folder which contains the features.yaml file 
+2. install as a python package. See https://github.com/BenMacKenzie/churn_model_demo as an example.  Note that you must create a .env file in folder which contains the features.yaml file 
 
 
 
@@ -32,6 +32,7 @@ https://docs.google.com/presentation/d/1tVkrwCLVwFp8cZC7CmAHSNFhsJrcTdC20MlZfptk
 9. The demo repo (https://github.com/BenMacKenzie/churn_model_demo) illustrates 'hyper-features' which are features with variable parameters. 
 10. Connecting 'hyper-features' to feature store needs to be worked out.  Currently the option is to add all of them or specify individual version by their (generated) name
 11. Fix feature store feature gen observation dates.  Align with grain of feature, e.g., if grain is monthly make sure feature store contains an observation on first of month.
+
 
 
 ### Building
