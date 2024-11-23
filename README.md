@@ -35,6 +35,16 @@ https://docs.google.com/presentation/d/1tVkrwCLVwFp8cZC7CmAHSNFhsJrcTdC20MlZfptk
 
 
 
+### Building
+
+
+
+```
+python3 -m build  
+python3 -m twine upload --repository testpypi dist/*
+
+python3 -m twine upload dist/*
+
 ```
 
 

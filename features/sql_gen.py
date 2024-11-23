@@ -22,13 +22,14 @@ def get_jinja_map(feature_spec, table):
 
 
 def get_query_template(feature, table):
-    if feature['type'] == 'time_series_aggregate':
+    if feature['type'] == 'time_series_growth':
         template = environment.get_template("timeseries_growth.j2")
+    elif feature['type'] == 'time_series_aggregate':
+        template = environment.get_template("fact_aggregations.j2")
     elif feature['type'] == 'lookup' and table['type'] == 'dimension_type2':
         template = environment.get_template("type2_lookup.j2")
     elif feature['type'] == 'lookup' and table['type'] == 'dimension_type1':
         template = environment.get_template("type1_lookup.j2")
-    
     elif feature['type'] == 'fact_aggregate':
         template = environment.get_template("fact_aggregations.j2")
  
@@ -55,6 +56,8 @@ def test_sql():
     for feature_name, features_spec in features.items():
         sql.append(get_sql_for_feature(feature_name))
     return sql
+
+
 
 
 
