@@ -10,7 +10,7 @@ https://docs.google.com/presentation/d/1tVkrwCLVwFp8cZC7CmAHSNFhsJrcTdC20MlZfptk
 ### options for use
 
 1. clone this repo.  create features.yaml.  follow demo notebook. do not check back in.
-2. install as a python package. See https://github.com/BenMacKenzie/churn_model_demo as an example.  Note that you must create a .env file in folder which contains the features.yaml file 
+2. install as a python package. See https://github.com/BenMacKenzie/churn_model_demo as an example.  
 
 
 
@@ -34,27 +34,6 @@ https://docs.google.com/presentation/d/1tVkrwCLVwFp8cZC7CmAHSNFhsJrcTdC20MlZfptk
 11. Fix feature store feature gen observation dates.  Align with grain of feature, e.g., if grain is monthly make sure feature store contains an observation on first of month.
 
 
-
-### Building
-
-
-
-```
-python3 -m build  
-python3 -m twine upload --repository testpypi dist/*
-
-python3 -m twine upload dist/*
-
-```
-
-
-### Running unit tests on databricks
-
-1. install the databricks extension for vscode
-2. use this repo as a template.  Note the following:
-3. remote_test_harness/pytest_databricks.py
-4. .vscode/launch.json 
-5. write tests as usual (see tests/time_series/time_series_test.py as an example)
 
 
  
