@@ -51,7 +51,7 @@ feature_lookups = [
 # MAGIC     label="commit",
 # MAGIC )
 # MAGIC ```
-# MAGIC 
+# MAGIC
 # MAGIC #### I like to refer to the df in this api call as the EOL dataframe:  Entity, Observation Date, Label.
 
 # COMMAND ----------
@@ -103,7 +103,7 @@ display(df)
 # MAGIC %md
 # MAGIC ####As a good citizen you want to share your features.
 # MAGIC ####Don't just write your training data set to the feature store!
-# MAGIC 
+# MAGIC
 # MAGIC 1. don't restrict customers to 3 year contracts.
 # MAGIC 2. backfill history at a well-considered time density.
 

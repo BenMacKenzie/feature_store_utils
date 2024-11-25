@@ -5,12 +5,17 @@
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC create database ben_churn_model
+# MAGIC use catalog benmackenzie_catalog
 
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC use ben_churn_model
+# MAGIC create database churn_model
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC use churn_model
 
 # COMMAND ----------
 
@@ -60,20 +65,6 @@ endDate = '2050-12-31'
 # MAGIC   dates
 # MAGIC order by
 # MAGIC   calendarDate
-
-# COMMAND ----------
-
-
-
-# COMMAND ----------
-
-# MAGIC %sql
-# MAGIC SELECT dateadd(month, -1, to_date('2009-01-12'));
-
-# COMMAND ----------
-
-# MAGIC %sql
-# MAGIC select * from dim_calendar;
 
 # COMMAND ----------
 

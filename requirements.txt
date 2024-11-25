@@ -1,5 +1,5 @@
 python-dotenv
-databricks-feature-store
+databricks-feature-engineering
 Jinja2
 pandas
 pyaml

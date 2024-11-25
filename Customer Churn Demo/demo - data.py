@@ -4,8 +4,16 @@
 
 # COMMAND ----------
 
+pip install -r ../requirements.txt
+
+# COMMAND ----------
+
+dbutils.library.restartPython()
+
+# COMMAND ----------
+
 # MAGIC %sql
-# MAGIC use ben_churn_model
+# MAGIC use benmackenzie_catalog.churn_model
 
 # COMMAND ----------
 
@@ -57,7 +65,19 @@
 
 # COMMAND ----------
 
+
+import sys
+import os
+
+sys.path.insert(0, os.path.abspath(os.path.join(os.getcwd(), '..')))
+
 from features.feature_generation import build_training_data_set
+
+
+
+
+# COMMAND ----------
+
 df = build_training_data_set()
 display(df)
 
@@ -70,11 +90,11 @@ display(df)
 # COMMAND ----------
 
 from features.feature_generation import build_feature_table
-build_feature_table('customer_service_calls', drop_existing=True)
+build_feature_table('customer_service_calls', drop_existing=False)
 
 # COMMAND ----------
 
-build_feature_table('dbu_growth', drop_existing=True)
+build_feature_table('dbu_growth', drop_existing=False)
 
 # COMMAND ----------
 
@@ -138,7 +158,3 @@ training_df = training_set.load_df()
 # COMMAND ----------
 
 display(training_df)
-
-# COMMAND ----------
-
-

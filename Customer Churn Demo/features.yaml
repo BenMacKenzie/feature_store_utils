@@ -1,4 +1,4 @@
-schema: ben_churn_model
+schema: churn_model
 
 eol_table: 
   name: renewal_eol
@@ -58,7 +58,7 @@ features:
   data_type: float
   table: dbu
   default_value: 1
-  type: time_series_aggregate
+  type: time_series_growth
   function: geometric_average
   source_col: sql_dbu
   grain: month
@@ -72,7 +72,7 @@ features:
   data_type: float
   table: dbu
   default_value: 1
-  type: time_series_aggregate
+  type: time_series_growth  
   function: geometric_average
   source_col: job_dbu
   grain: month
