@@ -12,6 +12,10 @@ https://docs.google.com/presentation/d/1tVkrwCLVwFp8cZC7CmAHSNFhsJrcTdC20MlZfptk
 1. clone this repo.  create features.yaml.  follow demo notebook. do not check back in.
 2. install as a python package. See https://github.com/BenMacKenzie/churn_model_demo as an example.  
 
+### Bugs
+
+1. Need to be able to create tables associated with lookups e.g., to handle transformation functions.
+2. average_growth(col, length) macro has a divide by 0 bug.  Not even sure when this would be used instead of geometric_growth.
 
 
 ### Notes
