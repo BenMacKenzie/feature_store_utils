@@ -44,8 +44,8 @@ features:
   data_type: float
   table: dbu
   default_value: 1
-  type: time_series_aggregate
-  function: geometric_average
+  type: time_series_growth
+  function: geometric_growth
   source_col: dbu
   grain: day
   time_boundary: calendarDate
@@ -58,7 +58,7 @@ features:
   data_type: float
   table: dbu
   default_value: 1
-  type: time_series_aggregate
+  type: time_series_growth
   function: average_growth
   source_col: dbu
   grain: day

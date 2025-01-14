@@ -27,3 +27,6 @@ dependencies = [
 [tool.setuptools.package-data]
 "features.templates" = ["*.j2"]
 
+[tool.pytest_env]
+DATABRICKS_CLUSTER_ID = {value = "1127-14505-wla3xgc5", skip_if_set = true}
+

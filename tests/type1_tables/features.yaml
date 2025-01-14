@@ -19,7 +19,7 @@ tables:
   name: customer
   type: dimension_type1
   pk: customer_id
-  eol_key: id
+  eol_key: customer_id
   
  
 features:

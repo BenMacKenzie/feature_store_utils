@@ -1,5 +1,6 @@
-from pyspark.sql import SparkSession
+from databricks.connect import DatabricksSession
 import pytest
+import os
 from datetime import date, timedelta
 import pandas as pd
 from pathlib import Path
@@ -8,11 +9,13 @@ from features.feature_generation import build_training_data_set
 
 
 @pytest.fixture
-def spark() -> SparkSession:
+def spark() -> DatabricksSession:
     """
     Create a spark session. Unit tests don't have access to the spark global
     """
-    return SparkSession.builder.getOrCreate()
+    #return DatabricksSession.builder.getOrCreate()
+    return DatabricksSession.builder.clusterId('1127-114505-wla3xgc5').getOrCreate()
+  
 
 
 def test_growth(spark):
@@ -42,7 +45,7 @@ def test_growth(spark):
         data_spec = yaml.safe_load(stream)
 
     print(data_spec)
-    df = build_training_data_set(data_spec)
+    df = build_training_data_set(data_spec, spark)
     pdf = df.toPandas()
     assert pdf.iloc[0]['6_day_geometric_growth_sql_dbu']==1.05
     assert pdf.iloc[0]['6_day_average_growth_sql_dbu']==1.05

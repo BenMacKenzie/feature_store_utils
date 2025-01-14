@@ -23,8 +23,7 @@ https://docs.google.com/presentation/d/1tVkrwCLVwFp8cZC7CmAHSNFhsJrcTdC20MlZfptk
 1. Current version is experimental.  Not clear that Jinja is the right way to write parameterized SQL. Might be better to do in Python.
 2. Current version is not optimized. Each feature is calculated individually, whereas if table, filters and time windows are identical, multiple aggregation features can be calculated simultaneously. 
 3. I believe there are around a dozen standard feature types.  The most common have been implemented.  Note that views can fill in a lot of gaps if encountered.  missing:
-  - type 1 lookup.
-  - 1st order aggregations over time series (e.g., just treat it like a fact table)
+
   - 2nd order aggregations over time series e.g., max monthly job dbu over 6 month window.
   - time in state,  e.g., how long was a ticket open.  based on a type 2 table.
   - time to event in fact table, e.g., time since last call to customer support
@@ -38,6 +37,10 @@ https://docs.google.com/presentation/d/1tVkrwCLVwFp8cZC7CmAHSNFhsJrcTdC20MlZfptk
 11. Fix feature store feature gen observation dates.  Align with grain of feature, e.g., if grain is monthly make sure feature store contains an observation on first of month.
 
 
+# notes on testing:
+I think https://docs.databricks.com/en/dev-tools/databricks-connect/python/testing.html  needs to be updated to indicate that db-connect only works with pytest if you are using the default profile.   It does not work with other profiles.
 
+Also there is no connection between the configuration (profile, auth, cluster) in the Databricks 'panel' and pytest...so you need to explicitly specify the cluster you want to use as well. 
 
+Tests run correctly individualy but fail if I run them all at once. Possibly due to reuse of renewal_eol table.
  

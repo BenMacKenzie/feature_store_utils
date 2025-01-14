@@ -1,4 +1,4 @@
-from pyspark.sql import SparkSession
+from databricks.connect import DatabricksSession
 import pytest
 from datetime import date, timedelta
 import pandas as pd
@@ -8,11 +8,12 @@ from features.feature_generation import build_training_data_set
 
 
 @pytest.fixture
-def spark() -> SparkSession:
+def spark() -> DatabricksSession:
     """
     Create a spark session. Unit tests don't have access to the spark global
     """
-    return SparkSession.builder.getOrCreate()
+    #return DatabricksSession.builder.getOrCreate()
+    return DatabricksSession.builder.clusterId('1127-114505-wla3xgc5').getOrCreate()
 
 
 def test_type1_lookup(spark):
@@ -25,7 +26,7 @@ def test_type1_lookup(spark):
     spark.sql("insert into table customer values (102, 'benmackenzie@gmail.com')")
 
     
-    spark.sql("create or replace table renewal_eol (id int, renewal_date date, commit boolean);")
+    spark.sql("create or replace table renewal_eol (customer_id int, renewal_date date, commit boolean);")
     spark.sql("insert into table renewal_eol values (101, \"2019-01-20\", true)")
     spark.sql("insert into table renewal_eol values (102, \"2022-01-20\", true)")
 
@@ -34,7 +35,7 @@ def test_type1_lookup(spark):
     with open('tests/type1_tables/features.yaml', "r") as stream:
         data_spec = yaml.safe_load(stream)
 
-    df = build_training_data_set(data_spec)
+    df = build_training_data_set(data_spec, spark)
     pdf = df.toPandas()
     assert pdf.iloc[0]['current_email_domain']=='DATABRICKS'
     assert pdf.iloc[1]['current_email_domain']=='GMAIL'

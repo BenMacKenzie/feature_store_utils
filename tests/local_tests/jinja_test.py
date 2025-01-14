@@ -6,7 +6,7 @@ from features.feature_spec import load
 
 
 def test_type1():
-    with open('tests/local_tests/features.yaml', "r") as stream:
+    with open('tests/local_tests/features_1.yaml', "r") as stream:
         data_spec = yaml.safe_load(stream)
 
     load(data_spec)

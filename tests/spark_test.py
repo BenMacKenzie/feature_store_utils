@@ -1,13 +1,13 @@
-from pyspark.sql import SparkSession
+from databricks.connect import DatabricksSession
 import pytest
 
 
 @pytest.fixture
-def spark() -> SparkSession:
+def spark() -> DatabricksSession:
     """
     Create a spark session. Unit tests don't have access to the spark global
     """
-    return SparkSession.builder.getOrCreate()
+    return DatabricksSession.builder.getOrCreate()
 
 
 def test_spark(spark):

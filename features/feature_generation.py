@@ -9,6 +9,7 @@ from features.feature_spec import load_data_spec, get_data_spec, get_features, g
 
 
 def create_eo_table(entity_table, pk, start_date, end_date, grain, eo_table_name):
+    spark = SparkSession.builder.getOrCreate()
     data_spec=get_data_spec()
     calendar_table = data_spec['calendar']
     schema = data_spec['schema']
@@ -31,6 +32,9 @@ def create_eo_table(entity_table, pk, start_date, end_date, grain, eo_table_name
 
 
 def register_dimension_table(table):
+    spark = SparkSession.builder.getOrCreate()
+    fs = FeatureStoreClient()
+    data_spec=get_data_spec()
     schema = data_spec['schema']
     spark.sql(f"use database {schema}")
     source_table_name = table['source_table_name']
@@ -48,6 +52,7 @@ def update_feature_table(feature_table):
 
 
 def build_feature_table(feature_table_name, drop_existing=False, update=False):
+    spark = SparkSession.builder.getOrCreate()
     data_spec = load_data_spec()
     feature_tables = get_feature_tables()
     feature_table = feature_tables[feature_table_name]
@@ -75,6 +80,7 @@ def build_feature_table(feature_table_name, drop_existing=False, update=False):
             "name": "observation_date"
         }
     }
+    fs = FeatureStoreClient()
 
     if update:
         start_date = datetime.today().strftime('%Y-%m-%d')
@@ -119,7 +125,10 @@ def update_feature_table(feature_table):
     build_feature_table(feature_table, drop_existing=False, update=True)
 
 
-def build_training_data_set(d=None):
+def build_training_data_set(d=None, spark=None):
+    if spark is None:
+        spark = SparkSession.builder.getOrCreate()
+        
     data_spec = load_data_spec(d)
     features = get_features()
     
@@ -151,6 +160,8 @@ def build_training_data_set(d=None):
 
 
 def register_dimension_table(table):
+    fs = FeatureStoreClient()
+    spark = SparkSession.builder.getOrCreate()
     data_spec=get_data_spec()
     schema = data_spec['schema']
     spark.sql(f"use database {schema}")
@@ -164,5 +175,5 @@ def register_dimension_table(table):
 
 
 
-spark = SparkSession.builder.getOrCreate()
-fs = FeatureStoreClient()
+#spark = SparkSession.builder.getOrCreate()
+#fs = FeatureStoreClient()
