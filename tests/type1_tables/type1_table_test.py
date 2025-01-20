@@ -18,8 +18,8 @@ def spark() -> DatabricksSession:
 
 def test_type1_lookup(spark):
     # Databricks notebook source
-    spark.sql('create schema if not exists feature_utils_test')
-    spark.sql('use feature_utils_test')
+    spark.sql('create schema if not exists feature_utils_type1_test')
+    spark.sql('use feature_utils_type1_test')
 
     spark.sql("create or replace table customer (customer_id int, email string)")
     spark.sql("insert into table customer values (101, 'ben.mackenzie@databricks.com')")

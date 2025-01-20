@@ -20,8 +20,8 @@ def spark() -> DatabricksSession:
 
 def test_growth(spark):
     # Databricks notebook source
-    spark.sql('create schema if not exists feature_utils_test')
-    spark.sql('use feature_utils_test')
+    spark.sql('create schema if not exists feature_utils_time_series_test')
+    spark.sql('use feature_utils_time_series_test')
     beginDate = '2000-01-01'
     endDate = '2050-12-31'
     spark.sql(f"select explode(sequence(to_date('{beginDate}'), to_date('{endDate}'), interval 1 day)) as calendarDate").createOrReplaceTempView('dates')

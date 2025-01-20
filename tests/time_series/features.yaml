@@ -1,4 +1,4 @@
-schema: feature_utils_test
+schema: feature_utils_time_series_test
 
 eol_table: 
   name: renewal_eol

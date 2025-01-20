@@ -22,8 +22,5 @@ def test_fact_aggregate():
     print(select_clause)
     
 
-#test_type1()   
 
-test_fact_aggregate()
-  
   
